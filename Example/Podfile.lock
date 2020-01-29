@@ -1,0 +1,27 @@
+PODS:
+  - InvertedSwift (0.1.0)
+  - Nimble (7.3.4)
+  - Quick (1.2.0)
+
+DEPENDENCIES:
+  - InvertedSwift (from `../`)
+  - Nimble (~> 7.0)
+  - Quick (~> 1.2.0)
+
+SPEC REPOS:
+  trunk:
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  InvertedSwift:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  InvertedSwift: 0c99e0568e9024bff821033a66deca8542af82cb
+  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+
+PODFILE CHECKSUM: 2aa99a94294c0bb127a1a607984ba8b113eeba6c
+
+COCOAPODS: 1.8.4
