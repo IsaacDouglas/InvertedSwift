@@ -17,7 +17,7 @@ InvertedSwift is available through [CocoaPods](https://cocoapods.org). To instal
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'InvertedSwift'
+  pod 'InvertedSwift', :git => 'https://github.com/IsaacDouglas/InvertedSwift.git'
 ```
 
 ## Author
