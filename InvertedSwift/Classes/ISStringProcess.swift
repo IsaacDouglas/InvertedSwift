@@ -10,6 +10,8 @@ import Foundation
 public protocol ISStringProcess {
     func stopWords() -> [String]?
     func split(text: String) -> [String]
+    func removeDiacritic() -> Bool
+    func caseInsensitive() -> Bool
 }
 
 public class StringProcessDefault: ISStringProcess {
@@ -18,6 +20,14 @@ public class StringProcessDefault: ISStringProcess {
     }
 
     public func split(text: String) -> [String] {
-        return text.lowercased().components(separatedBy: CharacterSet.alphanumerics.inverted).filter({ !$0.isEmpty })
+        return text.components(separatedBy: CharacterSet.alphanumerics.inverted).filter({ !$0.isEmpty })
+    }
+    
+    public func removeDiacritic() -> Bool {
+        return true
+    }
+    
+    public func caseInsensitive() -> Bool {
+        return true
     }
 }

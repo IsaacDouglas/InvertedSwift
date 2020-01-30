@@ -8,7 +8,7 @@
 import Foundation
 
 public struct ISLocationWord {
-    let documentName: String
-    let line: Int
-    let wordNum: Int
+    public let documentName: String
+    public let line: Int
+    public let wordNum: Int
 }

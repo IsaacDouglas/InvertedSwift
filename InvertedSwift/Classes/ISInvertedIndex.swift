@@ -7,11 +7,13 @@
 
 import Foundation
 
-public class InvertedIndex {
+public class ISInvertedIndex {
     
     internal var documentNames = [String]()
     internal var invertedIndex = [String : [ISLocationWord]]()
-    var stringProcess: ISStringProcess = StringProcessDefault()
+    public var stringProcess: ISStringProcess = StringProcessDefault()
+    
+    public init() {}
     
     public func index(document: ISDocument) {
         
@@ -20,12 +22,8 @@ public class InvertedIndex {
         self.documentNames.append(documentName)
         
         for (indexLine, line) in document.lines().enumerated() {
-
-            var split = self.stringProcess.split(text: line)
             
-            if let stopWord = self.stringProcess.stopWords() {
-                split = split.filter({ word in !stopWord.contains(word) })
-            }
+            let split = self.preProcessing(line: line)
 
             for (indexWord, word) in split.enumerated() {
                 let locations = self.invertedIndex[word]
@@ -34,14 +32,14 @@ public class InvertedIndex {
                     self.invertedIndex[word] = [ISLocationWord]()
                 }
                 
-                let location = ISLocationWord(documentName: documentName, line: indexLine, wordNum: indexWord + 1)
+                let location = ISLocationWord(documentName: documentName, line: indexLine + 1, wordNum: indexWord + 1)
                 self.invertedIndex[word]?.append(location)
             }
         }
     }
     
     public func find(text: String) -> [ISLocationWord] {
-        let words = self.stringProcess.split(text: text)
+        let words = self.preProcessing(line: text)
         return words
             .map({ word in self.invertedIndex[word] ?? [] })
             .filter({ !$0.isEmpty })
@@ -49,4 +47,22 @@ public class InvertedIndex {
             .sorted(by: { $0.documentName < $1.documentName })
     }
     
+}
+
+extension ISInvertedIndex {
+    internal func preProcessing(line: String) -> [String] {
+        let newLine = self.stringProcess.caseInsensitive() ? line.lowercased() : line
+        var words = self.stringProcess.split(text: newLine)
+        if let stopWord = self.stringProcess.stopWords() {
+            words = words.filter({ word in !stopWord.contains(word) })
+        }
+        if self.stringProcess.removeDiacritic() {
+            words = words.map({ word in self.removeDiacritic(word: word) })
+        }
+        return words
+    }
+    
+    internal func removeDiacritic(word: String) -> String {
+        return word.folding(options: .diacriticInsensitive, locale: nil)
+    }
 }
