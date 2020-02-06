@@ -12,6 +12,7 @@ public protocol ISStringProcess {
     func split(text: String) -> [String]
     func removeDiacritic() -> Bool
     func caseInsensitive() -> Bool
+    func minWordLength() -> Int
 }
 
 public class StringProcessDefault: ISStringProcess {
@@ -29,5 +30,9 @@ public class StringProcessDefault: ISStringProcess {
     
     public func caseInsensitive() -> Bool {
         return true
+    }
+    
+    public func minWordLength() -> Int {
+        return 2
     }
 }

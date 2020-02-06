@@ -9,7 +9,7 @@ import Foundation
 
 public class ISInvertedIndex {
     
-    internal var documentNames = [String]()
+    internal var documents = [String : ISDocument]()
     internal var invertedIndex = [String : [ISLocationWord]]()
     public var stringProcess: ISStringProcess = StringProcessDefault()
     
@@ -18,12 +18,15 @@ public class ISInvertedIndex {
     public func index(document: ISDocument) {
         
         let documentName = document.name()
-        guard !self.documentNames.contains(documentName) else { return }
-        self.documentNames.append(documentName)
+        guard !self.documents.contains(where: { $0.key == documentName }) else { return }
+        self.documents[documentName] = document
         
-        for (indexLine, line) in document.lines().enumerated() {
+        let lines = document.lines()
+
+        for (indexLine, line) in lines.enumerated() {
             
-            let split = self.preProcessing(line: line)
+            let length = self.stringProcess.minWordLength()
+            let split = self.preProcessing(line: line).filter({ $0.count >= length })
 
             for (indexWord, word) in split.enumerated() {
                 let locations = self.invertedIndex[word]
@@ -38,13 +41,28 @@ public class ISInvertedIndex {
         }
     }
     
-    public func find(text: String) -> [ISLocationWord] {
+    public func find(text: String) -> [ISWord] {
         let words = self.preProcessing(line: text)
         return words
-            .map({ word in self.invertedIndex[word] ?? [] })
-            .filter({ !$0.isEmpty })
-            .flatMap({ $0 })
-            .sorted(by: { $0.documentName < $1.documentName })
+            .map({ word in
+                let location = self.invertedIndex[word] ?? []
+                return ISWord(word: word, locationWord: location)
+            })
+    }
+    
+    public func findDocument(text: String) -> [ISDocument] {
+        var set = Set<String>()
+        var documents = [ISDocument]()
+        
+        let locations = self.ordination(text: text)
+        for location in locations {
+            let documentName = location.documentName
+            if !set.contains(documentName) {
+                set.insert(documentName)
+                documents.append(self.documents[documentName]!)
+            }
+        }
+        return documents
     }
     
 }
@@ -64,5 +82,14 @@ extension ISInvertedIndex {
     
     internal func removeDiacritic(word: String) -> String {
         return word.folding(options: .diacriticInsensitive, locale: nil)
+    }
+    
+    internal func ordination(text: String) -> [ISLocationWord] {
+        let words = self.preProcessing(line: text)
+        return words
+            .map({ word in self.invertedIndex[word] ?? [] })
+            .filter({ !$0.isEmpty })
+            .flatMap({ $0 })
+            .sorted(by: { $0.documentName < $1.documentName })
     }
 }
