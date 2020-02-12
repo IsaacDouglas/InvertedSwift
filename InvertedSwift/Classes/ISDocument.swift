@@ -8,12 +8,12 @@
 import Foundation
 
 public protocol ISDocument {
-    func name() -> String
-    func lines() -> [String]
+    func documentName() -> String
+    func documentLines() -> [String]
 }
 
 public extension ISDocument {
-    func lines() -> [String] {
+    func documentLines() -> [String] {
         return  Mirror(reflecting: self)
                    .children
                    .map({ $0.value as? String })

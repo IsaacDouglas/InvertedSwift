@@ -17,11 +17,11 @@ public class ISInvertedIndex {
     
     public func index(document: ISDocument) {
         
-        let documentName = document.name()
+        let documentName = document.documentName()
         guard !self.documents.contains(where: { $0.key == documentName }) else { return }
         self.documents[documentName] = document
         
-        let lines = document.lines()
+        let lines = document.documentLines()
 
         for (indexLine, line) in lines.enumerated() {
             
@@ -50,7 +50,7 @@ public class ISInvertedIndex {
             })
     }
     
-    public func findDocument(text: String) -> [ISDocument] {
+    public func findDocument(text: String, max: Int? = nil) -> [ISDocument] {
         var set = Set<String>()
         var documents = [ISDocument]()
         
@@ -60,6 +60,9 @@ public class ISInvertedIndex {
             if !set.contains(documentName) {
                 set.insert(documentName)
                 documents.append(self.documents[documentName]!)
+                if let max = max, documents.count >= max {
+                    break
+                }
             }
         }
         return documents
