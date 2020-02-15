@@ -14,6 +14,9 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		7B583CDACC9E4D3FE84CA087 /* Pods_InvertedSwift_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1607E8C8DFC4DA857B033061 /* Pods_InvertedSwift_Tests.framework */; };
+		90A9251523F6FA7F008D8D2E /* FindTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A9251423F6FA7F008D8D2E /* FindTableViewController.swift */; };
+		90A9251723F7112E008D8D2E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A9251623F7112E008D8D2E /* Extension.swift */; };
+		90A9251923F716A0008D8D2E /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A9251823F716A0008D8D2E /* Entity.swift */; };
 		9E816761DC6B3A44DCF0E730 /* Pods_InvertedSwift_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C76357B402F0310CB99983F0 /* Pods_InvertedSwift_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +46,9 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		60881AF5F4312CA6EF048FDB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		90A9251423F6FA7F008D8D2E /* FindTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindTableViewController.swift; sourceTree = "<group>"; };
+		90A9251623F7112E008D8D2E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		90A9251823F716A0008D8D2E /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		9300C95AD7EF1C714FCB7CD6 /* Pods-InvertedSwift_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvertedSwift_Example.release.xcconfig"; path = "Target Support Files/Pods-InvertedSwift_Example/Pods-InvertedSwift_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C76357B402F0310CB99983F0 /* Pods_InvertedSwift_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InvertedSwift_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFF5178948435006E0323EC6 /* Pods-InvertedSwift_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvertedSwift_Example.debug.xcconfig"; path = "Target Support Files/Pods-InvertedSwift_Example/Pods-InvertedSwift_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -115,6 +121,9 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				90A9251423F6FA7F008D8D2E /* FindTableViewController.swift */,
+				90A9251623F7112E008D8D2E /* Extension.swift */,
+				90A9251823F716A0008D8D2E /* Entity.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -354,8 +363,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90A9251523F6FA7F008D8D2E /* FindTableViewController.swift in Sources */,
+				90A9251923F716A0008D8D2E /* Entity.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				90A9251723F7112E008D8D2E /* Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +515,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9T27QRB7Q6;
 				INFOPLIST_FILE = InvertedSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -519,6 +532,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9T27QRB7Q6;
 				INFOPLIST_FILE = InvertedSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";

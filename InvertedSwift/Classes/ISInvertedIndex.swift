@@ -11,9 +11,15 @@ public class ISInvertedIndex {
     
     internal var documents = [String : ISDocument]()
     internal var invertedIndex = [String : [ISLocationWord]]()
-    public var stringProcess: ISStringProcess = StringProcessDefault()
+    public var stringProcess: ISStringProcess!
     
-    public init() {}
+    public init(stringProcess: ISStringProcess) {
+        self.stringProcess = stringProcess
+    }
+    
+    public init() {
+        self.stringProcess = StringProcessDefault()
+    }
     
     public func index(document: ISDocument) {
         
@@ -41,6 +47,12 @@ public class ISInvertedIndex {
         }
     }
     
+    public func index(documents: [ISDocument]) {
+        for document in documents {
+            self.index(document: document)
+        }
+    }
+    
     public func find(text: String) -> [ISWord] {
         let words = self.preProcessing(line: text)
         return words
@@ -51,21 +63,30 @@ public class ISInvertedIndex {
     }
     
     public func findDocument(text: String, max: Int? = nil) -> [ISDocument] {
-        var set = Set<String>()
-        var documents = [ISDocument]()
+        var documentCount = [String : Int]()
         
         let locations = self.ordination(text: text)
+        
         for location in locations {
-            let documentName = location.documentName
-            if !set.contains(documentName) {
-                set.insert(documentName)
-                documents.append(self.documents[documentName]!)
-                if let max = max, documents.count >= max {
-                    break
-                }
+            let name = location.documentName
+            if documentCount[name] == nil {
+                documentCount[name] = 0
             }
+            documentCount[name]? += 1
         }
-        return documents
+        
+        let documents = documentCount
+            .sorted(by: { $0.0 > $1.0 })
+            .map({ documentName, count in (self.documents[documentName]!, count) })
+            .sorted(by: { $0.1 >= $1.1 })
+            .map({ $0.0 })
+        
+        var drop: Int = 0
+        if let max = max, documents.count >= max {
+            drop = documents.count - max
+        }
+        
+        return documents.dropLast(drop)
     }
     
 }
@@ -73,7 +94,9 @@ public class ISInvertedIndex {
 extension ISInvertedIndex {
     internal func preProcessing(line: String) -> [String] {
         let newLine = self.stringProcess.caseInsensitive() ? line.lowercased() : line
-        var words = self.stringProcess.split(text: newLine)
+        let trimm = newLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        var words = self.stringProcess.split(text: trimm)
         if let stopWord = self.stringProcess.stopWords() {
             words = words.filter({ word in !stopWord.contains(word) })
         }
