@@ -94,11 +94,12 @@ extension FindTableViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let documents = self.invertedIndex.findDocument(text: searchText)
+        let trimm = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if documents.isEmpty {
+        if trimm.isEmpty {
             self.filteredItems(items: self.completeItems())
         } else {
+            let documents = self.invertedIndex.findDocument(text: searchText)
             self.filteredItems(items: documents)
         }
     }

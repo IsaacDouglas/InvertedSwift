@@ -63,16 +63,16 @@ public class ISInvertedIndex {
     }
     
     public func findDocument(text: String, max: Int? = nil) -> [ISDocument] {
-        var documentCount = [String : Int]()
+        var documentCount = [String : Double]()
         
-        let locations = self.ordination(text: text)
+        let locations: [(score: Double, location: ISLocationWord)] = self.ordination(text: text)
         
         for location in locations {
-            let name = location.documentName
+            let name = location.location.documentName
             if documentCount[name] == nil {
-                documentCount[name] = 0
+                documentCount[name] = 0.0
             }
-            documentCount[name]? += 1
+            documentCount[name]? += location.score
         }
         
         let documents = documentCount
@@ -110,12 +110,25 @@ extension ISInvertedIndex {
         return word.folding(options: .diacriticInsensitive, locale: nil)
     }
     
-    internal func ordination(text: String) -> [ISLocationWord] {
+    internal func ordination(text: String) -> [(Double, ISLocationWord)] {
         let words = self.preProcessing(line: text)
-        return words
-            .map({ word in self.invertedIndex[word] ?? [] })
-            .filter({ !$0.isEmpty })
-            .flatMap({ $0 })
-            .sorted(by: { $0.documentName < $1.documentName })
+        
+        var locations = [(Double, ISLocationWord)]()
+        
+        for word in words {
+            if let location = self.invertedIndex[word] {
+                locations.append(contentsOf: location
+                    .map({ (1.0, $0) }))
+            }
+            
+            if self.stringProcess.contains() {
+                locations.append(contentsOf: self.invertedIndex
+                    .filter({ key, _ in key.elementsEqual(word) ? false : key.contains(word) })
+                    .map({ $0.value })
+                    .flatMap({ $0 })
+                    .map({ (0.5, $0) }))
+            }
+        }
+        return locations.sorted(by: { $0.1.documentName < $1.1.documentName })
     }
 }

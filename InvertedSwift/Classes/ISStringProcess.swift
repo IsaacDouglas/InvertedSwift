@@ -13,6 +13,7 @@ public protocol ISStringProcess {
     func removeDiacritic() -> Bool
     func caseInsensitive() -> Bool
     func minWordLength() -> Int
+    func contains() -> Bool
 }
 
 public class StringProcessDefault: ISStringProcess {
@@ -34,5 +35,9 @@ public class StringProcessDefault: ISStringProcess {
     
     public func minWordLength() -> Int {
         return 2
+    }
+
+    public func contains() -> Bool {
+        return true
     }
 }

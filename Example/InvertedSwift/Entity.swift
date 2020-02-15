@@ -42,4 +42,8 @@ class StringProcess: ISStringProcess {
     func split(text: String) -> [String] {
         return text.components(separatedBy: CharacterSet.alphanumerics.inverted).filter({ !$0.isEmpty })
     }
+    
+    func contains() -> Bool {
+        return true
+    }
 }
