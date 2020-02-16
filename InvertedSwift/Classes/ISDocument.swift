@@ -14,10 +14,23 @@ public protocol ISDocument {
 
 public extension ISDocument {
     func documentLines() -> [String] {
-        return  Mirror(reflecting: self)
-                   .children
-                   .map({ $0.value as? String })
-                   .filter({ $0 != nil })
-                   .map({ $0! })
+        let children = Mirror(reflecting: self).children
+        var list = [String]()
+        
+        list.append(contentsOf: children
+            .filter({ $0.value is [String] })
+            .map({ $0.value as! [String] })
+            .flatMap({ $0 }))
+        
+        list.append(contentsOf: children
+            .filter({ $0.value is String })
+            .map({ $0.value as! String }))
+        
+        list.append(contentsOf: children
+            .filter({ !($0.value is [String]) && !($0.value is String) })
+            .map({ "\($0.value)" })
+            .filter({ Double($0) != nil }))
+        
+        return list
     }
 }
