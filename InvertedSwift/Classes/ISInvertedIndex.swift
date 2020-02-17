@@ -9,17 +9,20 @@ import Foundation
 
 public class ISInvertedIndex {
     
+    public var contains: Bool = true
+    public var minWordLength: Int = 1
+    public var stopWords: [String]? = nil
+    public var removeDiacritic: Bool = true
+    public var caseInsensitive: Bool = true
+    
     internal var documents = [String : ISDocument]()
     internal var invertedIndex = [String : [ISLocationWord]]()
-    public var stringProcess: ISStringProcess!
     
-    public init(stringProcess: ISStringProcess) {
-        self.stringProcess = stringProcess
+    public init(stopWords: [String]) {
+        self.stopWords = stopWords
     }
     
-    public init() {
-        self.stringProcess = StringProcessDefault()
-    }
+    public init() {}
     
     public func index(document: ISDocument) {
         
@@ -31,8 +34,7 @@ public class ISInvertedIndex {
 
         for (indexLine, line) in lines.enumerated() {
             
-            let length = self.stringProcess.minWordLength()
-            let split = self.preProcessing(line: line).filter({ $0.count >= length })
+            let split = self.preProcessing(line: line).filter({ $0.count >= self.minWordLength })
 
             for (indexWord, word) in split.enumerated() {
                 let locations = self.invertedIndex[word]
@@ -92,15 +94,20 @@ public class ISInvertedIndex {
 }
 
 extension ISInvertedIndex {
+    
+    internal func split(text: String) -> [String] {
+        return text.components(separatedBy: CharacterSet.alphanumerics.inverted).filter({ !$0.isEmpty })
+    }
+    
     internal func preProcessing(line: String) -> [String] {
-        let newLine = self.stringProcess.caseInsensitive() ? line.lowercased() : line
+        let newLine = self.caseInsensitive ? line.lowercased() : line
         let trimm = newLine.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        var words = self.stringProcess.split(text: trimm)
-        if let stopWord = self.stringProcess.stopWords() {
+        var words = self.split(text: trimm)
+        if let stopWord = self.stopWords {
             words = words.filter({ word in !stopWord.contains(word) })
         }
-        if self.stringProcess.removeDiacritic() {
+        if self.removeDiacritic {
             words = words.map({ word in self.removeDiacritic(word: word) })
         }
         return words
@@ -121,7 +128,7 @@ extension ISInvertedIndex {
                     .map({ (1.0, $0) }))
             }
             
-            if self.stringProcess.contains() {
+            if self.contains {
                 locations.append(contentsOf: self.invertedIndex
                     .filter({ key, _ in key.elementsEqual(word) ? false : key.contains(word) })
                     .map({ $0.value })

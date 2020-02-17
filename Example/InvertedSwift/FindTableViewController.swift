@@ -28,7 +28,7 @@ class FindTableViewController: UITableViewController {
         self.tableView.allowsSelection = false
         self.tableView.addFooterView()
         
-        self.invertedIndex = ISInvertedIndex(stringProcess: StringProcess())
+        self.invertedIndex = ISInvertedIndex()
         self.invertedIndex.index(documents: self.completeDocuments)
     }
 

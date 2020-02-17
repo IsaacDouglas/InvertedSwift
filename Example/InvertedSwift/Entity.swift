@@ -21,29 +21,3 @@ struct Document: ISDocument {
         self.lines
     }
 }
-
-class StringProcess: ISStringProcess {
-    func minWordLength() -> Int {
-        return 1
-    }
-    
-    func caseInsensitive() -> Bool {
-        return true
-    }
-    
-    func removeDiacritic() -> Bool {
-        return true
-    }
-    
-    func stopWords() -> [String]? {
-        return nil
-    }
-    
-    func split(text: String) -> [String] {
-        return text.components(separatedBy: CharacterSet.alphanumerics.inverted).filter({ !$0.isEmpty })
-    }
-    
-    func contains() -> Bool {
-        return true
-    }
-}
