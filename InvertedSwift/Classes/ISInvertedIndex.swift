@@ -7,15 +7,15 @@
 
 import Foundation
 
-public class ISInvertedIndex {
+public class ISInvertedIndex<T: ISDocument> {
     
     public var contains: Bool = true
     public var minWordLength: Int = 1
     public var stopWords: [String]? = nil
     public var removeDiacritic: Bool = true
-    public var caseInsensitive: Bool = true
+    public var caseSensitive: Bool = false
     
-    internal var documents = [String : ISDocument]()
+    internal var documents = [String : T]()
     internal var invertedIndex = [String : [ISLocationWord]]()
     
     public init(stopWords: [String]) {
@@ -24,7 +24,7 @@ public class ISInvertedIndex {
     
     public init() {}
     
-    public func index(document: ISDocument) {
+    public func index(document: T) {
         
         let documentName = document.documentName()
         guard !self.documents.contains(where: { $0.key == documentName }) else { return }
@@ -49,7 +49,7 @@ public class ISInvertedIndex {
         }
     }
     
-    public func index(documents: [ISDocument]) {
+    public func index(documents: [T]) {
         for document in documents {
             self.index(document: document)
         }
@@ -64,7 +64,7 @@ public class ISInvertedIndex {
             })
     }
     
-    public func findDocument(text: String, max: Int? = nil) -> [ISDocument] {
+    public func findDocument(text: String, max: Int? = nil) -> [T] {
         var documentCount = [String : Double]()
         
         let locations: [(score: Double, location: ISLocationWord)] = self.ordination(text: text)
@@ -100,7 +100,7 @@ extension ISInvertedIndex {
     }
     
     internal func preProcessing(line: String) -> [String] {
-        let newLine = self.caseInsensitive ? line.lowercased() : line
+        let newLine = self.caseSensitive ? line : line.lowercased()
         let trimm = newLine.trimmingCharacters(in: .whitespacesAndNewlines)
         
         var words = self.split(text: trimm)

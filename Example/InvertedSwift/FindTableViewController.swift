@@ -11,9 +11,9 @@ import InvertedSwift
 
 class FindTableViewController: UITableViewController {
 
-    internal var invertedIndex: ISInvertedIndex!
-    internal var filteredDocuments = [ISDocument]()
-    internal var completeDocuments = [ISDocument]()
+    internal var invertedIndex = ISInvertedIndex<Document>()
+    internal var filteredDocuments = [Document]()
+    internal var completeDocuments = [Document]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +28,6 @@ class FindTableViewController: UITableViewController {
         self.tableView.allowsSelection = false
         self.tableView.addFooterView()
         
-        self.invertedIndex = ISInvertedIndex()
         self.invertedIndex.index(documents: self.completeDocuments)
     }
 
@@ -69,7 +68,7 @@ extension FindTableViewController {
         self.navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    internal func documents() -> [ISDocument] {
+    internal func documents() -> [Document] {
         let doc1 = Document(name: "doc1.txt", lines: ["Etiam et rhoncus nisl, non consectetur elit. Sed id ex nulla."])
         let doc2 = Document(name: "doc2.txt", lines: ["Sed quam ligula, feugiat vel rhoncus a, vulputate vitae justo."])
         let doc3 = Document(name: "doc3.txt", lines: ["Pellentesque turpis nunc, hendrerit quis volutpat nec, lobortis vitae metus."])
@@ -84,11 +83,11 @@ extension FindTableViewController {
 }
 
 extension FindTableViewController: UISearchBarDelegate {
-    func completeItems() -> [ISDocument] {
+    func completeItems() -> [Document] {
         return self.completeDocuments
     }
 
-    func filteredItems(items: [ISDocument]) {
+    func filteredItems(items: [Document]) {
         self.filteredDocuments = items
         self.tableView.reloadData()
     }
