@@ -81,14 +81,13 @@ public class ISInvertedIndex<T: ISDocument> {
             .sorted(by: { $0.0 > $1.0 })
             .map({ documentName, count in (self.documents[documentName]!, count) })
             .sorted(by: { $0.1 >= $1.1 })
-            .map({ $0.0 })
-        
+            
         var drop: Int = 0
         if let max = max, documents.count >= max {
             drop = documents.count - max
         }
         
-        return documents.dropLast(drop)
+        return documents.dropLast(drop).map({ $0.0 })
     }
     
 }
@@ -124,16 +123,17 @@ extension ISInvertedIndex {
         
         for word in words {
             if let location = self.invertedIndex[word] {
-                locations.append(contentsOf: location
-                    .map({ (1.0, $0) }))
+                locations.append(contentsOf: location.map({ (1.0, $0) }))
             }
             
             if self.contains {
-                locations.append(contentsOf: self.invertedIndex
+                let filter = self.invertedIndex
                     .filter({ key, _ in key.elementsEqual(word) ? false : key.contains(word) })
-                    .map({ $0.value })
+                    .map({ key, value in value.map({ (key, $0) }) })
                     .flatMap({ $0 })
-                    .map({ (0.5, $0) }))
+                    .map({ (key, value) in ((Double(word.count) / Double(key.count)), value) })
+                
+                locations.append(contentsOf: filter)
             }
         }
         return locations.sorted(by: { $0.1.documentName < $1.1.documentName })
